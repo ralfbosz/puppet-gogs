@@ -1,5 +1,6 @@
 fixtures:
   repositories:
     stdlib: "https://github.com/puppetlabs/puppetlabs-stdlib.git"
+    puppetstats: "https://github.com/kschu91/puppetstats"
   symlinks:
     gogs: "#{source_dir}"

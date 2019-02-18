@@ -1,3 +1,10 @@
+## 2019-02-18 Release 2.0.0
+- Removed params.pp and move data to hiera
+- Add datatypes for validation
+- Make use of rspec-puppet-facts for rspec
+- Use $facts insteads of $::operatingsystem
+- This version drops Puppet 3 support
+
 ## 2018-04-01 Release 1.4.0
 - Added parameter `log_path`, which allows setting the root path where gogs will store logs.
 - Unsupported operating systems are now getting useful warning, but do not fail anymore.

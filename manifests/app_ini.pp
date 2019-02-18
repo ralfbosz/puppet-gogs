@@ -27,8 +27,8 @@ class gogs::app_ini (
     },
   }
 
-  $template_app_ini = deep_merge($gogs::params::app_ini, $default_app_in, $app_ini)
-  $template_app_ini_sections = deep_merge($gogs::params::app_ini_sections, $default_ini_sections, $app_ini_sections)
+  $template_app_ini = deep_merge($gogs::app_ini, $default_app_in, $app_ini)
+  $template_app_ini_sections = deep_merge($gogs::app_ini_sections, $default_ini_sections, $app_ini_sections)
 
   file { "${installation_directory}/custom":
     ensure => 'directory',

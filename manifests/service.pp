@@ -9,7 +9,7 @@ class gogs::service
 
   ) {
 
-  case $::operatingsystem {
+  case $facts['os']['name'] {
     'RedHat': {
       ::gogs::sysconfig::centos { 'RedHat': }
     }
@@ -26,7 +26,7 @@ class gogs::service
       ::gogs::sysconfig::debian { 'Ubuntu': }
     }
     default: {
-      warning("${::operatingsystem} not supported yet: Make sure to start gogs manually!")
+      warning("${facts['os']['name']} not supported yet: Make sure to start gogs manually!")
     }
   }
 

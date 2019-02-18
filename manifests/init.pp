@@ -1,35 +1,27 @@
 class gogs (
 
-  $service_ensure         = $gogs::params::service_ensure,
-  $service_name           = $gogs::params::service_name,
-
-  $manage_packages        = $gogs::params::manage_packages,
-
-  $enable_puppetstats     = $gogs::params::enable_puppetstats,
-
-  $version                = $gogs::params::version,
-  $installation_directory = $gogs::params::installation_directory,
-  $repository_root        = $gogs::params::repository_root,
-
-  $manage_user            = $gogs::params::manage_user,
-  $manage_home            = $gogs::params::manage_home,
-  $owner                  = $gogs::params::owner,
-  $group                  = $gogs::params::group,
-  $home                   = undef,
-
-  $app_ini                = {},
-  $app_ini_sections       = {},
-
-  $sysconfig              = {},
-
-  $log_path               = undef,
-
-) inherits gogs::params {
+  Stdlib::Ensure::Service    $service_ensure,
+  String                     $service_name,
+  Boolean                    $manage_packages,
+  Boolean                    $enable_puppetstats,
+  String                     $version,
+  Stdlib::Unixpath           $installation_directory,
+  Stdlib::Unixpath           $repository_root,
+  Boolean                    $manage_user,
+  Boolean                    $manage_home,
+  String                     $owner,
+  String                     $group,
+  Optional[Stdlib::Unixpath] $home,
+  Optional[Hash]             $app_ini,
+  Optional[Hash]             $app_ini_sections,
+  Optional[Hash]             $sysconfig,
+  Optional[Stdlib::Unixpath] $log_path,
+) {
 
   puppetstats { 'kschu91-gogs': enabled => $enable_puppetstats }
 
-  if !($::operatingsystem in [ 'RedHat', 'OracleLinux', 'CentOS', 'Debian', 'Ubuntu' ]) {
-    warning("${::operatingsystem} not supported yet: Gogs might not running as expected!")
+  if !($facts['os']['name'] in [ 'RedHat', 'OracleLinux', 'CentOS', 'Debian', 'Ubuntu' ]) {
+    warning("${facts['os']['name']} not supported yet: Gogs might not running as expected!")
   }
 
   anchor { 'gogs::begin': }
@@ -40,5 +32,5 @@ class gogs (
   -> class { '::gogs::app_ini': }
   -> class { '::gogs::service': }
   -> anchor { 'gogs::end': }
-
 }
+

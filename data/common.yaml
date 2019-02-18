@@ -1,0 +1,30 @@
+---
+gogs::service_ensure: 'running'
+gogs::service_name: 'gogs'
+gogs::manage_packages: true
+gogs::enable_puppetstats: true
+gogs::manage_user: true
+gogs::manage_home: true
+gogs::version: 'latest'
+gogs::installation_directory: '/opt/gogs'
+gogs::repository_root: '/var/git'
+gogs::owner: 'git'
+gogs::group: 'git'
+gogs::home: ~
+gogs::app_ini:
+  'APP_NAME': 'Go Git Service (managed by puppet)'
+  'RUN_USER': "%{hiera('gogs::owner')}"
+  'RUN_MODE': 'prod'
+gogs::app_ini_sections:
+  'server':
+    'DOMAIN': 'localhost'
+    'ROOT_URL': 'http://localhost:3000'
+    'HTTP_ADDR': '0.0.0.0'
+    'HTTP_PORT': 3000
+  'repository':
+    'ROOT': "%{hiera('gogs::repository_root')}"
+  'security':
+    'INSTALL_LOCK': false
+gogs::sysconfig: ~
+gogs::log_path: ~
+...

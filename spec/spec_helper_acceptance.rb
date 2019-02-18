@@ -1,29 +1,31 @@
-require 'beaker-rspec'
+require 'beaker-rspec/spec_helper'
+require 'beaker-rspec/helpers/serverspec'
+require 'beaker/puppet_install_helper'
+require_relative 'spec_helper_acceptance_methods'
 
-install_puppet_agent_on hosts, {}
+unless ENV['RS_PROVISION'] == 'no' or ENV['BEAKER_provision'] == 'no'
+  # Install Puppet Enterprise Agent
+  run_puppet_install_helper
+
+  # Clone module dependencies
+  clone_dependent_modules
+end
 
 RSpec.configure do |c|
   # Project root
-  module_root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-  module_name = module_root.split('-').last
+  proj_root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 
   # Readable test descriptions
   c.formatter = :documentation
 
   # Configure all nodes in nodeset
   c.before :suite do
-    # Install module and dependencies
-    puppet_module_install(:source => module_root, :module_name => module_name)
+    # Install dependent modules
+    install_dependent_modules
 
-    pp = <<-EOS
-      package { "git": ensure => "latest", }
-    EOS
+    # Install module
+    puppet_module_install(:source => proj_root, :module_name => 'gogs')
 
-    apply_manifest_on(hosts, pp, :catch_failures => false)
-
-    hosts.each do |host|
-      on host, puppet('module','install','puppetlabs-stdlib'), { :acceptable_exit_codes => [0,1] }
-      on host, puppet('module','install','kschu91-puppetstats'), { :acceptable_exit_codes => [0,1] }
-    end
+    # Perform further configuration tasks here
   end
 end
